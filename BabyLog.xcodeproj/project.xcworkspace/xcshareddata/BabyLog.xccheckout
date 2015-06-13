@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>8E08CC68-2EE8-4614-81CB-5757DE9A7CA2</string>
+	<key>IDESourceControlProjectName</key>
+	<string>BabyLog</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>8B143882D3C26FEA839FEE23B80CE52A68A64BC5</key>
+		<string>http://github.com/hyven/BabyLog.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>BabyLog.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>8B143882D3C26FEA839FEE23B80CE52A68A64BC5</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>http://github.com/hyven/BabyLog.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>8B143882D3C26FEA839FEE23B80CE52A68A64BC5</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>8B143882D3C26FEA839FEE23B80CE52A68A64BC5</string>
+			<key>IDESourceControlWCCName</key>
+			<string>BabyLog</string>
+		</dict>
+	</array>
+</dict>
+</plist>
