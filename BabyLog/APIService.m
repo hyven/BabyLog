@@ -9,6 +9,7 @@
 #import "APIService.h"
 #import "User.h"
 #import "Diary.h"
+#import "BabyInfo.h"
 #import "OperationContainer.h"
 
 @implementation APIService
@@ -47,6 +48,15 @@
     [[OperationContainer shareOperationContainer] addOperationObject:self.delegate withMethod:changePassword];
 }
 
+#pragma mark - BabyInfo
+
+-(void) getBabyInfo
+{
+    GetBabyInfo * info = [[GetBabyInfo alloc]init];
+    info.delegate = self.delegate;
+    
+    [[OperationContainer shareOperationContainer] addOperationObject:self.delegate withMethod:info];
+}
 
 #pragma mark - Dairy
 

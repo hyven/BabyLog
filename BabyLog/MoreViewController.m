@@ -9,6 +9,8 @@
 #import "MoreViewController.h"
 #import "ConstantDefine.h"
 #import "LoginViewController.h"
+#import "NavViewController.h"
+#import "BabyConfigViewController.h"
 
 @interface MoreViewController ()
 
@@ -145,7 +147,8 @@
 {
     switch (indexPath.row) {
         case 0:{
-            
+            BabyConfigViewController *babyCV= [[BabyConfigViewController alloc]init];
+            [self.navigationController pushViewController:babyCV animated:YES];
         }
             break;
         case 1:{
@@ -184,7 +187,10 @@
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         LoginViewController *loginvc = [[LoginViewController alloc]init];
-        [self.navigationController pushViewController:loginvc animated:YES];
+        NavViewController *navController = [[NavViewController alloc]initWithRootViewController:loginvc];
+        navController.navigationBarHidden = YES;
+        
+        self.view.window.rootViewController = navController;
     }
 }
 

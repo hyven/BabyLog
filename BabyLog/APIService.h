@@ -25,6 +25,10 @@
 
 -(void) userChangeUserPassword:(NSString *) oldPass WithNewPassword:(NSString *) newPass;
 
+#pragma mark - BabyInfo
+
+-(void) getBabyInfo;
+
 #pragma mark - Diary
 
 -(void) getDiaryList:(NSString *)day;
@@ -44,6 +48,10 @@
 -(void) userRegisterCallBack:(APIResult *) result;
 
 -(void) userChangePassWordCallBack:(APIResult *) result;
+
+#pragma mark - BabyInfoCallBack
+
+-(void) getBabyInfoCallBack:(APIResult *) result;
 
 #pragma mark - DairyCallBack
 
