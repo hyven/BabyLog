@@ -48,7 +48,7 @@
     formTV.delegate=self;
     formTV.dataSource=self;
     formTV.showsVerticalScrollIndicator=NO;
-    formTV.allowsSelection = NO;
+    formTV.tag = 9001;
     [self.view addSubview:formTV];
     
     itemsArray = [NSMutableArray arrayWithObjects:@"O",@"A",@"B",@"AB", nil];
@@ -59,10 +59,12 @@
     comBox.titlesList = itemsArray;
     comBox.delegate = self;
     comBox.tableHeight = 160;
-
+    comBox.listTable.tag = 9002;
+    
     service = [[APIService alloc] init];
     service.delegate = self;
     [service getBabyInfo];
+    
 }
 
 #pragma mark 页面效果
@@ -77,33 +79,29 @@
     
 }
 
+
 -(void)closeAllTheComBoxView
 {
-    for(UIView *subView in self.view.subviews)
+    if(comBox.isOpen)
     {
-        if([subView isKindOfClass:[LMComBoxView class]])
-        {
-            LMComBoxView *combox = (LMComBoxView *)subView;
-            if(combox.isOpen)
-            {
-                [UIView animateWithDuration:0.3 animations:^{
-                    CGRect frame = combox.listTable.frame;
-                    frame.size.height = 0;
-                    [combox.listTable setFrame:frame];
-                } completion:^(BOOL finished){
-                    [combox.listTable removeFromSuperview];
-                    combox.isOpen = NO;
-                    combox.arrow.transform = CGAffineTransformRotate(combox.arrow.transform, DEGREES_TO_RADIANS(180));
-                }];
-            }
-        }
+        [UIView animateWithDuration:0.3 animations:^{
+            CGRect frame = comBox.listTable.frame;
+            frame.size.height = 0;
+            [comBox.listTable setFrame:frame];
+        } completion:^(BOOL finished){
+            [comBox.listTable removeFromSuperview];
+            comBox.isOpen = NO;
+            comBox.arrow.transform = CGAffineTransformRotate(comBox.arrow.transform, DEGREES_TO_RADIANS(180));
+        }];
     }
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    [self.view endEditing:YES];
     [self closeAllTheComBoxView];
 }
+
 
 #pragma mark tableViewDelegate
 
@@ -196,10 +194,7 @@
             UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, 60, 40)];
             [label setText:@"籍  贯："];
             [label setFont:[UIFont systemFontOfSize:12.0f]];
-            [cell addSubview:label];
-            
-            
-        }
+            [cell addSubview:label];        }
             break;
 
         default:
@@ -215,6 +210,13 @@
 {
     return 40;
 }
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+}
+
+
 //
 //- (void) changeBirthday :(UIDatePicker *)sender {
 //    NSDate *selectedDate = sender.date;
