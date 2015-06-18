@@ -11,6 +11,9 @@
 #import "APIResult.h"
 #import "ConstantDefine.h"
 #import "BabyInfoModel.h"
+#import "SelectBloodTypeViewController.h"
+#import "SelectSexViewController.h"
+#import "SelectAreaViewController.h"
 
 
 @interface BabyConfigViewController ()
@@ -22,7 +25,9 @@
     UITextField *nameTF;
     UITextField *nicknameTF;
     UITextField *birthdayTF;
-    LMComBoxView *comBox;
+    UITextField *sexTF;
+    UITextField *btTextField;
+    UITextField *areaTF;
     NSMutableArray *itemsArray;
 }
 
@@ -52,19 +57,16 @@
     [self.view addSubview:formTV];
     
     itemsArray = [NSMutableArray arrayWithObjects:@"O",@"A",@"B",@"AB", nil];
-    
-    comBox = [[LMComBoxView alloc]init];
-    comBox.backgroundColor = [UIColor whiteColor];
-    comBox.arrowImgName = @"down_dark0.png";
-    comBox.titlesList = itemsArray;
-    comBox.delegate = self;
-    comBox.tableHeight = 160;
-    comBox.listTable.tag = 9002;
+
     
     service = [[APIService alloc] init];
     service.delegate = self;
     [service getBabyInfo];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectBloodType:) name:@"SelectBloodType" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectSex:) name:@"SelectSex" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectArea:) name:@"SelectArea" object:nil];
+
 }
 
 #pragma mark 页面效果
@@ -74,34 +76,48 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
--(void)selectAtIndex:(int)index inCombox:(LMComBoxView *)_combox
-{
-    
-}
-
-
--(void)closeAllTheComBoxView
-{
-    if(comBox.isOpen)
-    {
-        [UIView animateWithDuration:0.3 animations:^{
-            CGRect frame = comBox.listTable.frame;
-            frame.size.height = 0;
-            [comBox.listTable setFrame:frame];
-        } completion:^(BOOL finished){
-            [comBox.listTable removeFromSuperview];
-            comBox.isOpen = NO;
-            comBox.arrow.transform = CGAffineTransformRotate(comBox.arrow.transform, DEGREES_TO_RADIANS(180));
-        }];
-    }
-}
-
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [self.view endEditing:YES];
-    [self closeAllTheComBoxView];
 }
 
+-(void)selectSex
+{
+    SelectSexViewController *btView = [[SelectSexViewController alloc]init];
+    [self.navigationController pushViewController:btView animated:YES];
+}
+
+-(void)selectBloodType
+{
+    SelectBloodTypeViewController *btView = [[SelectBloodTypeViewController alloc]init];
+    [self.navigationController pushViewController:btView animated:YES];
+}
+
+-(void)selectArea
+{
+    SelectAreaViewController *btView = [[SelectAreaViewController alloc]init];
+    [self.navigationController pushViewController:btView animated:YES];
+}
+
+
+#pragma mark - 观察者
+
+- (void)selectSex:(NSNotification *)_notification
+{
+    int row =[[_notification object] intValue];
+    sexTF.text = row == 1 ? @"男" : @"女";
+}
+
+- (void)selectBloodType:(NSNotification *)_notification
+{
+    int row =[[_notification object] intValue];
+    btTextField.text = [itemsArray objectAtIndex:row];
+}
+
+- (void)selectArea:(NSNotification *)_notification
+{
+    areaTF.text = [_notification object];
+}
 
 #pragma mark tableViewDelegate
 
@@ -171,6 +187,24 @@
             [label setFont:[UIFont systemFontOfSize:12.0f]];
             [cell addSubview:label];
             
+            UIButton *btButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            btButton.frame = CGRectMake(80, 0, SCREEN_WIDTH - 90, 40);
+            [btButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [btButton addTarget:self action:@selector(selectSex) forControlEvents:UIControlEventTouchUpInside];
+            
+            sexTF=[[UITextField alloc] init];
+            sexTF.frame=CGRectMake(0, 3, SCREEN_WIDTH - 100, 35);
+            sexTF.backgroundColor=[UIColor clearColor];
+            sexTF.textColor=[UIColor blackColor];
+            sexTF.font=[UIFont systemFontOfSize:12];
+            sexTF.enabled=NO;
+            sexTF.text = info.sex == 1 ? @"男" : @"女";
+            [btButton addSubview:sexTF];
+            
+            UIImageView *iconView01=[[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 130, 12, 20, 20)];
+            iconView01.image=[UIImage imageNamed:@"icon_arrow_enter"];
+            [btButton addSubview:iconView01];
+            [cell addSubview:btButton];
         }
             break;
         case 4:
@@ -180,13 +214,24 @@
             [label setFont:[UIFont systemFontOfSize:12.0f]];
             [cell addSubview:label];
             
-            comBox.frame = CGRectMake(80, 10, 100, 20);
-            comBox.supView = cell;
-            comBox.defaultIndex = [itemsArray indexOfObject:info.bloodType];
-            [comBox defaultSettings];
-            comBox.tag = 2001;
-            [cell addSubview:comBox];
-
+            UIButton *btButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            btButton.frame = CGRectMake(80, 0, SCREEN_WIDTH - 90, 40);
+            [btButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [btButton addTarget:self action:@selector(selectBloodType) forControlEvents:UIControlEventTouchUpInside];
+            
+            btTextField=[[UITextField alloc] init];
+            btTextField.frame=CGRectMake(0, 3, SCREEN_WIDTH - 100, 35);
+            btTextField.backgroundColor=[UIColor clearColor];
+            btTextField.textColor=[UIColor blackColor];
+            btTextField.font=[UIFont systemFontOfSize:12];
+            btTextField.enabled=NO;
+            btTextField.text = info.bloodType;
+            [btButton addSubview:btTextField];
+            
+            UIImageView *iconView01=[[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 130, 12, 20, 20)];
+            iconView01.image=[UIImage imageNamed:@"icon_arrow_enter"];
+            [btButton addSubview:iconView01];
+            [cell addSubview:btButton];
         }
             break;
         case 5:
@@ -194,7 +239,28 @@
             UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, 60, 40)];
             [label setText:@"籍  贯："];
             [label setFont:[UIFont systemFontOfSize:12.0f]];
-            [cell addSubview:label];        }
+            [cell addSubview:label];
+            
+            UIButton *btButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            btButton.frame = CGRectMake(80, 0, SCREEN_WIDTH - 90, 40);
+            [btButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [btButton addTarget:self action:@selector(selectArea) forControlEvents:UIControlEventTouchUpInside];
+            
+            areaTF=[[UITextField alloc] init];
+            areaTF.frame=CGRectMake(0, 3, SCREEN_WIDTH - 100, 35);
+            areaTF.backgroundColor=[UIColor clearColor];
+            areaTF.textColor=[UIColor blackColor];
+            areaTF.font=[UIFont systemFontOfSize:12];
+            areaTF.enabled=NO;
+            areaTF.text = [[NSString alloc]initWithFormat:@"%@ %@ %@", info.province, info.city, info.country];
+            [btButton addSubview:areaTF];
+            
+            UIImageView *iconView01=[[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 130, 12, 20, 20)];
+            iconView01.image=[UIImage imageNamed:@"icon_arrow_enter"];
+            [btButton addSubview:iconView01];
+            [cell addSubview:btButton];
+
+        }
             break;
 
         default:
@@ -210,12 +276,6 @@
 {
     return 40;
 }
-
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    
-}
-
 
 //
 //- (void) changeBirthday :(UIDatePicker *)sender {

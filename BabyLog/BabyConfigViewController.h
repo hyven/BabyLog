@@ -8,8 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
-#import "LMComBoxView.h"
 
-@interface BabyConfigViewController : UIViewController<UITableViewDataSource, LMComBoxViewDelegate, UITableViewDelegate>
+@interface BabyConfigViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 
 @end
