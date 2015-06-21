@@ -43,3 +43,42 @@
 }
 
 @end
+
+@implementation UpdateBabyInfo
+
+-(id) init
+{
+    self = [super init];
+    if (self) {
+        self.methodName = @"user.UpdateUserInfo";
+        
+    }
+    return self;
+}
+
+-(void) resultWithJson:(NSDictionary *) dic
+{
+    
+}
+
+-(void) methodCallBack
+{
+    if ([self.delegate respondsToSelector:@selector(updateBabyInfoCallBack:)]) {
+        [self.delegate updateBabyInfoCallBack:self.apiResult];
+    }
+}
+
+-(NSDictionary *) getRequestParams
+{
+    NSDictionary * dic=[[NSDictionary alloc]
+        initWithObjects:@[self.babyInfo.name, self.babyInfo.nickName,self.babyInfo.birthday,
+                          self.babyInfo.province,self.babyInfo.city, self.babyInfo.country,
+                          self.babyInfo.bloodType, self.babyInfo.introduction,
+                          [NSString stringWithFormat:@"%d", self.babyInfo.sex],self.babyInfo.headImg]
+        forKeys:@[@"BabyName",@"Nickname",@"Birthday",@"Province",@"City",@"Country"
+                  ,@"BloodType",@"Introduction",@"Sex",@"HeadImg"]];
+    
+    return dic;
+}
+
+@end

@@ -58,6 +58,15 @@
     [[OperationContainer shareOperationContainer] addOperationObject:self.delegate withMethod:info];
 }
 
+-(void) updateBabyInfo:(BabyInfoModel *)info
+{
+    UpdateBabyInfo *upinfo = [[UpdateBabyInfo alloc]init];
+    upinfo.babyInfo = info;
+    upinfo.delegate = self.delegate;
+    
+    [[OperationContainer shareOperationContainer] addOperationObject:self.delegate withMethod:upinfo];
+}
+
 #pragma mark - Dairy
 
 -(void) getDiaryList:(NSString *)day

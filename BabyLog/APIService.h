@@ -11,6 +11,7 @@
 @protocol BabyLogAPIServiceDelegate;
 
 #import <Foundation/Foundation.h>
+#import "BabyInfoModel.h"
 
 @interface APIService : NSObject
 
@@ -28,6 +29,8 @@
 #pragma mark - BabyInfo
 
 -(void) getBabyInfo;
+
+-(void) updateBabyInfo:(BabyInfoModel *)info;
 
 #pragma mark - Diary
 
@@ -52,6 +55,8 @@
 #pragma mark - BabyInfoCallBack
 
 -(void) getBabyInfoCallBack:(APIResult *) result;
+
+-(void) updateBabyInfoCallBack:(APIResult *) result;
 
 #pragma mark - DairyCallBack
 

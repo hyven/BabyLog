@@ -15,3 +15,9 @@
 @interface GetBabyInfo : MethodBase
 
 @end
+
+@interface UpdateBabyInfo : MethodBase
+
+@property(nonatomic, retain)BabyInfoModel* babyInfo;
+
+@end

@@ -187,9 +187,9 @@
 
 - (void)selectArea
 {
-    NSString *obj = [[NSString alloc]initWithFormat:@"%@ %@ %@", sp, sc, sa];
+    NSArray *area = [[NSArray alloc]initWithObjects:sp, sc, sa, nil];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SelectArea" object: obj];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SelectArea" object: area];
     [self.navigationController popViewControllerAnimated:YES];
 }
 

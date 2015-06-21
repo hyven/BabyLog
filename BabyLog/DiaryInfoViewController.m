@@ -26,7 +26,7 @@
     for (int i = 0; i < self.picList.count; i++) {
         UIImageView *imgView = [[UIImageView alloc]init];
         imgView.frame = CGRectMake(i * imgwidth, 0, imgwidth, imgheight);
-        NSString *rurl = [[self.picList objectAtIndex:i] stringByReplacingOccurrencesOfString:@"~" withString:HTTP_HEADER];
+        NSString *rurl = [[self.picList objectAtIndex:i] stringByReplacingOccurrencesOfString:@"~/" withString:HTTP_HEADER];
         NSData* data = [NSData dataWithContentsOfURL:[NSURL URLWithString:rurl]];
         imgView.image = [UIImage imageWithData:data];
         [self.scrollView addSubview:imgView];
