@@ -9,6 +9,7 @@
 #import "LoginViewController.h"
 #import "MainViewController.h"
 #import "ConstantDefine.h"
+#import "BabyInfoModel.h"
 
 @interface LoginViewController ()
 
@@ -167,6 +168,11 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"LoginSuccess" object:nil];
         
         [[TKAlertCenter defaultCenter] postAlertWithMessage:@"登陆成功"];
+        
+        APIService *service = [[APIService alloc] init];
+        service.delegate = self;
+        [service getBabyInfo];
+        
         [self.navigationController pushViewController:mainViewController animated:YES];
     }
     else
@@ -175,6 +181,15 @@
         [[TKAlertCenter defaultCenter] postAlertWithMessage:result.error];
     }
 }
+
+-(void) getBabyInfoCallBack:(APIResult *)result
+{
+    if (result.statusCode == 200) {
+        BabyInfoModel *info = [BabyInfoModel getModelFromJson:[result.data objectForKey:@"UserInfo"]];
+        [[NSUserDefaults standardUserDefaults] setValue:info.headImg forKey:@"HeadImg"];
+        [[NSUserDefaults standardUserDefaults] setValue:info.nickName forKey:@"nickName"];    }
+}
+
 
 - (void)didReceiveMemoryWarning
 {

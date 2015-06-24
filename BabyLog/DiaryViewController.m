@@ -15,6 +15,7 @@
 #import "DiaryTableViewCell.h"
 #import "DiaryInfoViewController.h"
 #import "DiaryCreateViewController.h"
+#import "SelectDateViewController.h"
 
 @interface DiaryViewController ()
 {
@@ -24,6 +25,9 @@
 @end
 
 @implementation DiaryViewController
+{
+    NavBarView *navbar;
+}
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -43,10 +47,11 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self.view setBackgroundColor:[UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1]];
+    navbar = [[NavBarView alloc]init];
+    navbar.delegate = self;
+    navbar.frame = CGRectMake(0, 20, SCREEN_WIDTH, 44);
+    [self.view addSubview:navbar];
     
-    UIImageView *navBarImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 20, 320, 44)];
-    navBarImageView.image = [UIImage imageNamed:@"regist_nav_bg"];
-    [self.view addSubview:navBarImageView];
     
     UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     addBtn.frame = CGRectMake(20, 68, 280, 35);
@@ -71,14 +76,38 @@
     service = [[APIService alloc] init];
     service.delegate = self;
     
-    [service getDiaryList:@"2015-06-06"];
+    NSDateFormatter *dateformatter=[[NSDateFormatter alloc] init];
+    [dateformatter setDateFormat:@"YYYY-MM-dd"];
+    NSString * locationString=[dateformatter stringFromDate:[NSDate date]];
+    [service getDiaryList:locationString];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectDate:) name:@"SelectDate" object:nil];
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
 //    [service getDiaryList:@"2015-05-12"];
+
 }
+
+-(void)TouchRightButton
+{
+    SelectDateViewController *dateVC = [[SelectDateViewController alloc]init];
+    [self.navigationController pushViewController:dateVC animated:YES];
+}
+
+-(UINavigationController *)setSuperViewNavigationController
+{
+    return self.navigationController;
+}
+
+- (void)selectDate:(NSNotification *)_notification
+{
+    NSString *dateStr = [_notification object];
+    [service getDiaryList:dateStr];
+    [navbar setDateStr:dateStr];
+}
+
 
 #pragma mark 回调函数
 

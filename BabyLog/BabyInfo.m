@@ -50,7 +50,7 @@
 {
     self = [super init];
     if (self) {
-        self.methodName = @"user.UpdateUserInfo";
+        self.methodName = @"user.IOSUpdateUserInfoMethod";
         
     }
     return self;

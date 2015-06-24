@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "APIService.h"
+#import "NavBarView.h"
 
-@interface DiaryViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate,BabyLogAPIServiceDelegate>
+@interface DiaryViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate,BabyLogAPIServiceDelegate, NavBarDelegate>
 {
     UITableView * dataTable;
     NSMutableArray * sections;
