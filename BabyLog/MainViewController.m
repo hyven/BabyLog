@@ -7,6 +7,9 @@
 //
 
 #import "MainViewController.h"
+#import "NavBarView.h"
+#import "ConstantDefine.h"
+#import "APIService.h"
 
 @interface MainViewController ()
 
@@ -42,14 +45,9 @@ static MainViewController *tabMainContainer = nil;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-
+    
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 -(void)SelectIndexController:(NSInteger) interger;
 {
@@ -81,6 +79,11 @@ static MainViewController *tabMainContainer = nil;
     }
 }
 
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
 
 /*
 #pragma mark - Navigation

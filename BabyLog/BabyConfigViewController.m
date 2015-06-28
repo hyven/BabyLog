@@ -17,6 +17,7 @@
 #import "SelectDateViewController.h"
 #import "TKAlertCenter.h"
 #import "ReachTool.h"
+#import "NavBarView.h"
 
 
 @interface BabyConfigViewController ()
@@ -50,10 +51,6 @@
     [service getBabyInfo];
 
     [self.view setBackgroundColor:[UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1]];
-    
-    UIImageView *navBarImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 20, 320, 44)];
-    navBarImageView.image = [UIImage imageNamed:@"regist_nav_bg"];
-    [self.view addSubview:navBarImageView];
     
     userid = tokenStr;
     
@@ -89,7 +86,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectBloodType:) name:@"SelectBloodType" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectSex:) name:@"SelectSex" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectArea:) name:@"SelectArea" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectDate:) name:@"SelectDate" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectDate:) name:@"SelectBabyConfigDate" object:nil];
     
     UISwipeGestureRecognizer * rightSwipeGestureRecognizer=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(rightSwipe)];
     rightSwipeGestureRecognizer.direction=UISwipeGestureRecognizerDirectionRight;
@@ -219,40 +216,54 @@
     return res;
 }
 
+#pragma mark 回调函数
+
+-(void) getBabyInfoCallBack:(APIResult *)result
+{
+    if (result.statusCode == 200) {
+        info = [BabyInfoModel getModelFromJson:[result.data objectForKey:@"UserInfo"]];
+    }
+}
+
 - (void)saveInfo
 {
     if (![ReachTool checkReachable]) {
         [[TKAlertCenter defaultCenter] postAlertWithMessage:@"请检查您的网络连接"];
         return;
     }
-    BabyInfoModel *model = [[BabyInfoModel alloc]init];
-    model.name = nameTF.text;
-    model.nickName = nicknameTF.text;
-    model.birthday = birthdayTF.text;
-    model.province = sp;
-    model.city = sc;
-    model.country = sa;
-    model.bloodType = btTextField.text;
-    model.introduction = desTF.text;
+    info.name = nameTF.text;
+    info.nickName = nicknameTF.text;
+    info.birthday = birthdayTF.text;
+    info.province = sp;
+    info.city = sc;
+    info.country = sa;
+    info.bloodType = btTextField.text;
+    info.introduction = desTF.text;
     if ([sexTF.text isEqual: @"女"]) {
-        model.sex = 0;
+        info.sex = 0;
     }
     else
     {
-        model.sex = 1;
+        info.sex = 1;
     }
-    model.headImg = @"";
+    info.headImg = @"";
     
-    APIService * service = [[APIService alloc] init];
-    service.delegate = self;
-    [service updateBabyInfo:model];
+    [service updateBabyInfo:info];
 }
-
 
 -(void)updateBabyInfoCallBack:(APIResult *)result
 {
     if (result.statusCode == 200) {
-         [[TKAlertCenter defaultCenter] postAlertWithMessage:@"信息保存成功"];
+        [[TKAlertCenter defaultCenter] postAlertWithMessage:@"信息保存成功"];
+        
+        [[NSUserDefaults standardUserDefaults] setValue:info.headImg forKey:@"HeadImg"];
+        [[NSUserDefaults standardUserDefaults] setValue:info.nickName forKey:@"nickName"];
+        
+        
+    }
+    else
+    {
+        [[TKAlertCenter defaultCenter] postAlertWithMessage:[NSString stringWithFormat:@"信息保存失败：%@", result.error]];
     }
 }
 
@@ -314,6 +325,7 @@
 - (void)selectDate
 {
     SelectDateViewController *sdView = [[SelectDateViewController alloc]init];
+    sdView.notificationName = @"SelectBabyConfigDate";
     [self.navigationController pushViewController:sdView animated:YES];
 }
 
@@ -522,15 +534,6 @@
         return 100;
     }
     return 40;
-}
-
-#pragma mark 回调函数
-
--(void) getBabyInfoCallBack:(APIResult *)result
-{
-    if (result.statusCode == 200) {
-        info = [BabyInfoModel getModelFromJson:[result.data objectForKey:@"UserInfo"]];
-    }
 }
 
 - (void)didReceiveMemoryWarning {

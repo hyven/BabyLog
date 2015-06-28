@@ -16,18 +16,17 @@
 #import "DiaryInfoViewController.h"
 #import "DiaryCreateViewController.h"
 #import "SelectDateViewController.h"
+#import "MainViewController.h"
 
 @interface DiaryViewController ()
 {
     APIService *service;
+    NavBarView *navbar;
 }
 
 @end
 
 @implementation DiaryViewController
-{
-    NavBarView *navbar;
-}
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -47,11 +46,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self.view setBackgroundColor:[UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1]];
-    navbar = [[NavBarView alloc]init];
-    navbar.delegate = self;
-    navbar.frame = CGRectMake(0, 20, SCREEN_WIDTH, 44);
-    [self.view addSubview:navbar];
-    
+    navbar = super.navbar;
     
     UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     addBtn.frame = CGRectMake(20, 68, 280, 35);
@@ -81,24 +76,16 @@
     NSString * locationString=[dateformatter stringFromDate:[NSDate date]];
     [service getDiaryList:locationString];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectDate:) name:@"SelectDate" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectDate:) name:@"SelectDairyDate" object:nil];
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
-//    [service getDiaryList:@"2015-05-12"];
-
-}
+#pragma mark - NavBarDelegate
 
 -(void)TouchRightButton
 {
     SelectDateViewController *dateVC = [[SelectDateViewController alloc]init];
+    dateVC.notificationName = @"SelectDairyDate";
     [self.navigationController pushViewController:dateVC animated:YES];
-}
-
--(UINavigationController *)setSuperViewNavigationController
-{
-    return self.navigationController;
 }
 
 - (void)selectDate:(NSNotification *)_notification

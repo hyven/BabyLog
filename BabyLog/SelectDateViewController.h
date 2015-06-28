@@ -12,5 +12,6 @@
 @interface SelectDateViewController : UIViewController<FSCalendarDataSource, FSCalendarDelegate>
 
 @property(nonatomic, retain) FSCalendar *calendar;
+@property(nonatomic, retain) NSString *notificationName;
 
 @end

@@ -9,13 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "APIService.h"
 #import "NavBarView.h"
+#import "BaseViewController.h"
 
-@interface DiaryViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate,BabyLogAPIServiceDelegate, NavBarDelegate>
+@interface DiaryViewController : BaseViewController<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate,BabyLogAPIServiceDelegate, NavBarDelegate>
 {
     UITableView * dataTable;
     NSMutableArray * sections;
     NSMutableArray * dataArray;
-//    UIColor * headerViewBg;
 }
 
 @property (nonatomic ,assign)NSString *day;

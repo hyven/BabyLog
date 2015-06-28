@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "APIService.h"
+#import "RatingBar.h"
 
-@interface DiaryCreateViewController : UIViewController<UIScrollViewDelegate,BabyLogAPIServiceDelegate>
+@interface DiaryCreateViewController : UIViewController<UIScrollViewDelegate,BabyLogAPIServiceDelegate,UITableViewDataSource, UITableViewDelegate>
 
 @end

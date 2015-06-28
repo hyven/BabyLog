@@ -18,6 +18,7 @@
 
 @implementation MoreViewController
 {
+    NavBarView *navbar;
     UITableView *tv;
     NSMutableArray *tvsection;
     NSMutableArray *tvsection2;
@@ -45,10 +46,6 @@
     // Do any additional setup after loading the view.
     [self.view setBackgroundColor:[UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1]];
     
-    UIImageView *navBarImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 20, 320, 44)];
-    navBarImageView.image = [UIImage imageNamed:@"regist_nav_bg"];
-    [self.view addSubview:navBarImageView];
-    
     tv = [[UITableView alloc]initWithFrame:CGRectMake(10, 64, SCREEN_WIDTH-20,SCREEN_HEIGHT-64) style:UITableViewStyleGrouped];
     tv.backgroundColor = [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1];
 
@@ -61,6 +58,7 @@
     tvsection = [NSMutableArray arrayWithObjects:@"宝贝管理", @"查询班级", @"所在班级", nil];
     tvsection2 = [NSMutableArray arrayWithObjects:@"检查新版本", @"关于", nil];
 }
+
 
 #pragma mark - tableViewDelegate
 

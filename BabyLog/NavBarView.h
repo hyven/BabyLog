@@ -16,6 +16,7 @@
 @property(nonatomic,assign) id<NavBarDelegate> delegate;
 
 -(void)setDateStr:(NSString*)dateStr;
+-(void)reloadBabyInfo;
 
 @end
 

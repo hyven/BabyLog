@@ -25,6 +25,7 @@
 {
     MainViewController *mainViewController;
     NSString *passwordStr;
+    APIService * service;
 }
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -42,7 +43,10 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-//    [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"Default"]]];
+    //    [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"Default"]]];
+    service = [[APIService alloc] init];
+    service.delegate = self;
+    
     UIImageView *backImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_bg"]];
     backImage.frame = CGRectMake(0, 20, SCREEN_WIDTH, SCREEN_HEIGHT);
     [self.view addSubview:backImage];
@@ -137,8 +141,6 @@
         return;
     }
         
-    APIService * service = [[APIService alloc] init];
-    service.delegate = self;
     [service userLoginWithUserName:self.userTextField.text password:self.passwordTextField.text];
 }
 
@@ -169,10 +171,9 @@
         
         [[TKAlertCenter defaultCenter] postAlertWithMessage:@"登陆成功"];
         
-        APIService *service = [[APIService alloc] init];
-        service.delegate = self;
         [service getBabyInfo];
         
+        mainViewController.selectedIndex = 0;
         [self.navigationController pushViewController:mainViewController animated:YES];
     }
     else

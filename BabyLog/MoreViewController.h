@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "APIService.h"
 #import "AppDelegate.h"
+#import "NavBarView.h"
+#import "BaseViewController.h"
 
-@interface MoreViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIActionSheetDelegate,BabyLogAPIServiceDelegate>
+@interface MoreViewController : BaseViewController<UITableViewDelegate,UITableViewDataSource,UIActionSheetDelegate,BabyLogAPIServiceDelegate, NavBarDelegate>
 
 @end

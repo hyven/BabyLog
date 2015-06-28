@@ -76,7 +76,7 @@
 
 - (void)selectDate
 {    
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SelectDate" object: selDate];
+    [[NSNotificationCenter defaultCenter] postNotificationName:_notificationName object: selDate];
     [self.navigationController popViewControllerAnimated:YES];
 }
 

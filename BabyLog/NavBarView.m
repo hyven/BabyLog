@@ -13,6 +13,7 @@
 @implementation NavBarView
 {
     UIButton *right;
+    UIButton *left;
 }
 
 -(id)init
@@ -22,18 +23,18 @@
         [self setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"regist_nav_bg"]]];
         
         /*左边按钮*/
-        UIButton *left = [UIButton buttonWithType:UIButtonTypeCustom];
+        left = [UIButton buttonWithType:UIButtonTypeCustom];
         [left setFrame:CGRectMake(0, 6, 160, 30)];
         
-        NSString *headImgStr = [[NSUserDefaults standardUserDefaults] valueForKey: @"HeadImg"];
-        NSString *rurl = [headImgStr stringByReplacingOccurrencesOfString:@"~/" withString:HTTP_HEADER];
-        NSData* data = [NSData dataWithContentsOfURL:[NSURL URLWithString:rurl]];
-        UIImage *headImg =[UIImage imageWithData:data];
-        [left setImage:headImg forState:UIControlStateNormal];
+//        NSString *headImgStr = [[NSUserDefaults standardUserDefaults] valueForKey: @"HeadImg"];
+//        NSString *rurl = [headImgStr stringByReplacingOccurrencesOfString:@"~/" withString:HTTP_HEADER];
+//        NSData* data = [NSData dataWithContentsOfURL:[NSURL URLWithString:rurl]];
+//        UIImage *headImg =[UIImage imageWithData:data];
+//        [left setImage:headImg forState:UIControlStateNormal];
         left.imageEdgeInsets = UIEdgeInsetsMake(0,10,0,120);
-
-        NSString *nickName = [[NSUserDefaults standardUserDefaults] valueForKey:@"nickName"];
-        [left setTitle:[NSString stringWithFormat:@"宝贝：%@", nickName] forState:UIControlStateNormal];
+//
+//        NSString *nickName = [[NSUserDefaults standardUserDefaults] valueForKey:@"nickName"];
+//        [left setTitle:[NSString stringWithFormat:@"宝贝：%@", nickName] forState:UIControlStateNormal];
         [left.titleLabel setFont:[UIFont systemFontOfSize:16.0f]];
         left.titleEdgeInsets = UIEdgeInsetsMake(0, -115, 0, 0);
         
@@ -79,6 +80,18 @@
 -(void)setDateStr:(NSString*)dateStr
 {
     [right setTitle:dateStr forState:UIControlStateNormal];
+}
+
+-(void)reloadBabyInfo
+{
+    NSString *nickName = [[NSUserDefaults standardUserDefaults] valueForKey:@"nickName"];
+    [left setTitle:[NSString stringWithFormat:@"宝贝：%@", nickName] forState:UIControlStateNormal];
+    
+    NSString *headImgStr = [[NSUserDefaults standardUserDefaults] valueForKey: @"HeadImg"];
+    NSString *rurl = [headImgStr stringByReplacingOccurrencesOfString:@"~/" withString:HTTP_HEADER];
+    NSData* data = [NSData dataWithContentsOfURL:[NSURL URLWithString:rurl]];
+    UIImage *headImg =[UIImage imageWithData:data];
+    [left setImage:headImg forState:UIControlStateNormal];
 }
 
 /*
