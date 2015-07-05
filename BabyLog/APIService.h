@@ -32,9 +32,13 @@
 
 -(void) updateBabyInfo:(BabyInfoModel *)info;
 
+-(void) babyInfoUpdatePhotoWithBase64String:(NSString *)base64;
+
 #pragma mark - Diary
 
 -(void) getDiaryList:(NSString *)day;
+
+-(void) deleteDiary:(NSString *)diaryId;
 
 @end
 
@@ -58,10 +62,14 @@
 
 -(void) updateBabyInfoCallBack:(APIResult *) result;
 
+-(void) babyInfoUpdatePhotoCallBack:(APIResult *) result;
+
+
 #pragma mark - DairyCallBack
 
 -(void)getDiaryListCallBack:(APIResult*) result;
 
+-(void)deleteDiaryCallBack:(APIResult*) result;
 
 
 @end

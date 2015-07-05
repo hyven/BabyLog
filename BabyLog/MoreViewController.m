@@ -29,13 +29,10 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        UITabBarItem *tabBarItem = [[UITabBarItem alloc] initWithTitle:@"更多" image:nil tag:0];
-        
-        [tabBarItem setFinishedSelectedImage:[UIImage imageNamed:@"tabicon_more"]
-                 withFinishedUnselectedImage:[UIImage imageNamed:@"tabbar_home"]];
-        self.tabBarItem = tabBarItem;
-        self.view.tag = 1004;
+        self.tabBarItem.image = [[UIImage imageNamed:@"Gengduo-Grey"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        self.tabBarItem.selectedImage = [[UIImage imageNamed:@"Gengduo-Blue"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         [self.tabBarItem setImageInsets:UIEdgeInsetsMake(5.5, 0.0, -5.5, 0.0)];
+
     }
     return self;
 }

@@ -13,3 +13,9 @@
 @property (nonatomic ,retain) NSString *day;
 
 @end
+
+@interface DiaryDelete : MethodBase
+
+@property (nonatomic ,retain) NSString * diaryId;
+
+@end

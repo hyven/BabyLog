@@ -20,9 +20,9 @@
     if (self) {
         // Custom initialization
         self.view.tag = 1002;
-        self.tabBarItem.image = [[UIImage imageNamed:@"tabicon_message_off"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        self.tabBarItem.selectedImage = [[UIImage imageNamed:@"tabicon_message_on"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        self.tabBarItem.title = @"消息";
+        self.tabBarItem.image = [[UIImage imageNamed:@"Xiaoxi-Grey"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        self.tabBarItem.selectedImage = [[UIImage imageNamed:@"Xiaoxi-Blue"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [self.tabBarItem setImageInsets:UIEdgeInsetsMake(5.5, 0.0, -5.5, 0.0)];
     }
     return self;
 }

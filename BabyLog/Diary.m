@@ -42,3 +42,36 @@
 }
 
 @end
+
+@implementation DiaryDelete
+
+-(id) init
+{
+    self = [super init];
+    if (self) {
+        self.methodName = @"diary.deletediary";
+        
+    }
+    return self;
+}
+
+-(void) resultWithJson:(NSDictionary *) dic
+{
+    
+}
+
+-(void) methodCallBack
+{
+    if ([self.delegate respondsToSelector:@selector(deleteDiaryCallBack:)]) {
+        [self.delegate deleteDiaryCallBack:(APIResult *)self.apiResult];
+    }
+}
+
+-(NSDictionary *) getRequestParams
+{
+    NSDictionary * dic=[[NSDictionary alloc]initWithObjects:@[self.diaryId] forKeys:@[@"id"]];
+    
+    return dic;
+}
+
+@end

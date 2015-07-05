@@ -18,13 +18,17 @@
 #import "TKAlertCenter.h"
 #import "ReachTool.h"
 #import "NavBarView.h"
-
+#import "UzysAssetsPickerController.h"
+#import "MoreView.h"
+#import "SGActionView.h"
 
 @interface BabyConfigViewController ()
 {
     APIService *service;
     NSString *userid;
     BabyInfoModel *info;
+    UIButton *logoButton;
+    UIImageView *logoView;
     UITableView *formTV;
     UITextField *nameTF;
     UITextField *nicknameTF;
@@ -35,12 +39,39 @@
     NSMutableArray *itemsArray;
     UITextField *desTF;
     NSString *sp, *sc, *sa;
-}
+    NSString *vcTag;
 
+}
 
 @end
 
 @implementation BabyConfigViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        vcTag=@"BabyConfig";
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(camera) name:[NSString stringWithFormat:@"Camera%@",vcTag] object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(photo) name:[NSString stringWithFormat:@"Photo%@",vcTag] object:nil];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectBloodType:) name:@"SelectBloodType" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectSex:) name:@"SelectSex" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectArea:) name:@"SelectArea" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectDate:) name:@"SelectBabyConfigDate" object:nil];    }
+    return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:[NSString stringWithFormat:@"Camera%@",vcTag] object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:[NSString stringWithFormat:@"Photo%@",vcTag] object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SelectBloodType" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SelectSex" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SelectArea" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SelectBabyConfigDate" object:nil];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -57,14 +88,25 @@
     NSString *rurl = [info.headImg stringByReplacingOccurrencesOfString:@"~/" withString:HTTP_HEADER];
     NSData* data = [NSData dataWithContentsOfURL:[NSURL URLWithString:rurl]];
     
-    UIImageView *profileImg = [[UIImageView alloc]init];
-    profileImg.frame = CGRectMake(130, 80, 60, 60);
-    profileImg.layer.cornerRadius = profileImg.frame.size.width / 2;
-    profileImg.clipsToBounds = YES;
-    [profileImg setImage:[UIImage imageWithData:data]];
-    [self.view addSubview:profileImg];
+    logoButton=[[UIButton alloc] initWithFrame:CGRectMake(130, 10, 60, 60)];
+    logoButton.backgroundColor=[UIColor clearColor];
+    logoButton.layer.cornerRadius = logoButton.frame.size.width / 2;
+    logoButton.layer.masksToBounds=YES;
+    [logoButton addTarget:self action:@selector(selectLogo) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:logoButton];
     
-    formTV = [[UITableView alloc]initWithFrame:CGRectMake(10, 150, SCREEN_WIDTH-20,SCREEN_HEIGHT) style:UITableViewStylePlain];
+    logoView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 60, 60)];
+    logoView.contentMode=UIViewContentModeScaleAspectFill;
+    if (data.length == 0) {
+        logoView.image=[UIImage imageNamed:@"KidDefault"];
+    }
+    else
+    {
+        [logoView setImage:[UIImage imageWithData:data]];
+    }
+    [logoButton addSubview:logoView];
+    
+    formTV = [[UITableView alloc]initWithFrame:CGRectMake(10, logoButton.frame.size.height + 20, SCREEN_WIDTH-20,SCREEN_HEIGHT) style:UITableViewStylePlain];
     formTV.backgroundColor = [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1];
     formTV.tableFooterView = [[UIView alloc] init];
     formTV.delegate=self;
@@ -74,7 +116,7 @@
     [self.view addSubview:formTV];
     
     UIButton * button=[UIButton buttonWithType:UIButtonTypeCustom];
-    button.frame=CGRectMake(10, 500, 300, 40);
+    button.frame=CGRectMake(10, 430, 300, 40);
     [button setTitle:@"保存宝贝信息" forState:UIControlStateNormal];
     [button setBackgroundImage:[UIImage imageNamed:@"redbutton"] forState:UIControlStateNormal];
     [button addTarget:self action:@selector(saveInfo) forControlEvents:UIControlEventTouchUpInside];
@@ -83,138 +125,85 @@
     
     itemsArray = [NSMutableArray arrayWithObjects:@"O",@"A",@"B",@"AB", nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectBloodType:) name:@"SelectBloodType" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectSex:) name:@"SelectSex" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectArea:) name:@"SelectArea" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectDate:) name:@"SelectBabyConfigDate" object:nil];
-    
     UISwipeGestureRecognizer * rightSwipeGestureRecognizer=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(rightSwipe)];
     rightSwipeGestureRecognizer.direction=UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:rightSwipeGestureRecognizer];
 
 }
 
-+(NSString *)PostImagesToServer:(NSString *) strUrl dicPostParams:(NSMutableDictionary *)params dicImages:(NSMutableDictionary *) dicImages{
+#pragma mark 头像上传
+
+//选取头像
+- (void)selectLogo
+{
+    [formTV endEditing:YES];
     
-    NSString * res;
-//    
-    //分界线的标识符
-    NSString *TWITTERFON_FORM_BOUNDARY = @"D7uw9H2YbhRuVF60E9mEOJmEncb6QMjRx0T0j";
-    //根据url初始化request
-    //NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:strUrl] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10];
-    
-    NSURL *url = [NSURL URLWithString:strUrl];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    //分界线 --AaB03x
-    NSString *MPboundary=[[NSString alloc]initWithFormat:@"--%@",TWITTERFON_FORM_BOUNDARY];
-    //结束符 AaB03x--
-    NSString *endMPboundary=[[NSString alloc]initWithFormat:@"%@--",MPboundary];
-    //要上传的图片
-    UIImage *image;//=[params objectForKey:@"pic"];
-    //得到图片的data
-    //NSData* data = UIImagePNGRepresentation(image);
-    //http body的字符串
-    NSMutableString *body=[[NSMutableString alloc]init];
-    //参数的集合的所有key的集合
-    NSArray *keys= [params allKeys];
-    
-    //遍历keys
-    for(int i=0;i<[keys count];i++) {
-        //得到当前key
-        NSString *key=[keys objectAtIndex:i];
-        //如果key不是pic，说明value是字符类型，比如name：Boris
-        //if(![key isEqualToString:@"pic"]) {
-        //添加字段的值
-        [body appendFormat:@"%@\r\n",[params objectForKey:key]];
-        //添加分界线，换行
-        [body appendFormat:@"%@\r\n",MPboundary];
-        //添加字段名称，换2行
-        [body appendFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n",key];
-        [body appendFormat:@"Content-Type: text/plain; charset=utf-8\r\n"];
-        [body appendString:@"Content-Transfer-Encoding: 8bit\r\n\r\n"];
-        //}
-    }
-    ////添加分界线，换行
-    //[body appendFormat:@"%@\r\n",MPboundary];
-    
-    //声明myRequestData，用来放入http body
-    NSMutableData *myRequestData=[NSMutableData data];
-    //将body字符串转化为UTF8格式的二进制
-    [myRequestData appendData:[body dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    //循环加入上传图片
-    keys = [dicImages allKeys];
-    for(int i = 0; i< [keys count] ; i++){
-        //要上传的图片
-        image = [dicImages objectForKey:[keys objectAtIndex:i ]];
-        //得到图片的data
-        NSData* data =  UIImageJPEGRepresentation(image, 0.0);
-        NSMutableString *imgbody = [[NSMutableString alloc] init];
-        //此处循环添加图片文件
-        //添加图片信息字段
-        //声明pic字段，文件名为boris.png
-        //[body appendFormat:[NSString stringWithFormat: @"Content-Disposition: form-data; name=\"File\"; filename=\"%@\"\r\n", [keys objectAtIndex:i]]];
-        
-        ////添加分界线，换行
-        [imgbody appendFormat:@"%@\r\n",MPboundary];
-        [imgbody appendFormat:@"Content-Disposition: form-data; name=\"File%d\"; filename=\"%@.jpg\"\r\n", i, [keys objectAtIndex:i]];
-        //声明上传文件的格式
-        [imgbody appendFormat:@"Content-Type: application/octet-stream; charset=utf-8\r\n\r\n"];
-        
-        NSLog(@"上传的图片：%d  %@", i, [keys objectAtIndex:i]);
-        
-        //将body字符串转化为UTF8格式的二进制
-        //[myRequestData appendData:[body dataUsingEncoding:NSUTF8StringEncoding]];
-        [myRequestData appendData:[imgbody dataUsingEncoding:NSUTF8StringEncoding]];
-        //将image的data加入
-        [myRequestData appendData:data];
-        [myRequestData appendData:[ @"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    }
-    //声明结束符：--AaB03x--
-    NSString *end=[[NSString alloc]initWithFormat:@"%@\r\n",endMPboundary];
-    //加入结束符--AaB03x--
-    [myRequestData appendData:[end dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    //设置HTTPHeader中Content-Type的值
-    NSString *content=[[NSString alloc]initWithFormat:@"multipart/form-data; boundary=%@",TWITTERFON_FORM_BOUNDARY];
-    //设置HTTPHeader
-    [request setValue:content forHTTPHeaderField:@"Content-Type"];
-    //[request setValue:@"keep-alive" forHTTPHeaderField:@"connection"];
-    //[request setValue:@"UTF-8" forHTTPHeaderField:@"Charsert"];
-    //设置Content-Length
-    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[myRequestData length]] forHTTPHeaderField:@"Content-Length"];
-    //设置http body
-    [request setHTTPBody:myRequestData];
-    //http method
-    [request setHTTPMethod:@"POST"];
-    
-    //建立连接，设置代理
-    //NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    
-    //设置接受response的data
-    NSData *mResponseData;
-    NSError *err = nil;
-    mResponseData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&err];
-    
-    if(mResponseData == nil){
-        NSLog(@"err code : %@", [err localizedDescription]);
-    }
-    res = [[NSString alloc] initWithData:mResponseData encoding:NSUTF8StringEncoding];
-    /*
-     if (conn) {
-     mResponseData = [NSMutableData data];
-     mResponseData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&err];
-     
-     if(mResponseData == nil){
-     NSLog(@"err code : %@", [err localizedDescription]);
-     }
-     res = [[NSString alloc] initWithData:mResponseData encoding:NSUTF8StringEncoding];
-     }else{
-     res = [[NSString alloc] init];
-     }*/
-    NSLog(@"服务器返回：%@", res);
-    return res;
+    MoreView *moreView=[[MoreView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    int height=200;
+    [SGActionView showCommonWithContentView:moreView height:height];
+    tag=vcTag;
 }
+
+//打开相机
+- (void)camera
+{
+    // UIImagePickerControllerCameraDeviceRear 后置摄像头
+    // UIImagePickerControllerCameraDeviceFront 前置摄像头
+    BOOL isCamera = [UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceRear];
+    if (!isCamera) {
+        NSLog(@"没有摄像头");
+        return ;
+    }
+    
+    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+    imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+    imagePicker.delegate = self;
+    imagePicker.allowsEditing = YES; // 编辑模式
+    
+    [self  presentViewController:imagePicker animated:YES completion:^{
+    }];
+}
+
+//打开相册
+- (void)photo
+{
+    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+    imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    imagePicker.delegate = self;
+    imagePicker.allowsEditing = YES; // 编辑模式
+    
+    [self  presentViewController:imagePicker animated:YES completion:^{
+    }];
+}
+
+//选中照片
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)pinfo
+{
+    // UIImagePickerControllerOriginalImage 原始图片
+    // UIImagePickerControllerEditedImage 编辑后图片
+    UIImage *image = [pinfo objectForKey:UIImagePickerControllerOriginalImage];
+    [picker dismissViewControllerAnimated:YES completion:NULL];
+    
+    // 压缩照片
+    NSData *imageData = UIImageJPEGRepresentation(image, 0.5);
+    UIImage *tempImage = [UIImage imageWithData: imageData];
+    logoView.image=tempImage;
+    
+    [[logoButton layer] setBorderColor:[[UIColor colorWithWhite:1.0 alpha:1.0] CGColor]];
+    [[logoButton layer] setBorderWidth:1.5];
+    
+    NSString *encodedImageStr = [imageData base64Encoding];
+    NSLog(@"%@",encodedImageStr);
+    [service babyInfoUpdatePhotoWithBase64String:encodedImageStr];
+}
+
+//取消相册
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissViewControllerAnimated:YES completion:NULL];
+}
+
 
 #pragma mark 回调函数
 
@@ -264,6 +253,15 @@
     else
     {
         [[TKAlertCenter defaultCenter] postAlertWithMessage:[NSString stringWithFormat:@"信息保存失败：%@", result.error]];
+    }
+}
+
+- (void)babyInfoUpdatePhotoCallBack:(APIResult *)result
+{
+    if (result.statusCode == 200) {
+        [[TKAlertCenter defaultCenter] postAlertWithMessage:@"上传头像成功"];
+    } else {
+        [[TKAlertCenter defaultCenter] postAlertWithMessage:result.error];
     }
 }
 

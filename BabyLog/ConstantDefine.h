@@ -17,7 +17,7 @@
 #define ISIOS6_OR_EARLY [[[UIDevice currentDevice] systemVersion] floatValue] < 7
 #define NAVIGATION_BACKGROUND_COLOR [UIColor colorWithRed:244/255.0 green:97/255.0 blue:37/255.0 alpha:1]
 
-#define TABLEVIEWCELL_BACKGROUN_COLOR [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1]
+#define TABLEVIEWCELL_BACKGROUN_COLOR [UIColor colorWithRed:151/255.0 green:151/255.0 blue:151/255.0 alpha:1]
 
 #define HEADER_VIEW_BACKGROUD_COLOR_1 [UIColor colorWithRed:255/255.0 green:247/255.0 blue:224/255.0 alpha:1];
 #define HEADER_VIEW_BACKGROUD_COLOR_2 [UIColor colorWithRed:207/255.0 green:239/255.0 blue:255/255.0 alpha:1];

@@ -1,0 +1,35 @@
+//
+//  PrefixHeader.pch
+//  BabyLog
+//
+//  Created by jiangbin on 15/7/5.
+//  Copyright (c) 2015年 张弘. All rights reserved.
+//
+
+#ifndef BabyLog_PrefixHeader_pch
+#define BabyLog_PrefixHeader_pch
+
+#ifndef __IPHONE_5_0
+#warning "This project uses features only available in iOS SDK 5.0 and later."
+#endif
+
+#ifdef __OBJC__
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#endif
+
+#define IOS6_OR_EARLY [[[UIDevice currentDevice] systemVersion] floatValue] < 7
+#define IOS7_OR_LATE [[[UIDevice currentDevice] systemVersion] floatValue] >= 7
+#define IOS8_OR_LATE [[[UIDevice currentDevice] systemVersion] floatValue] >= 8
+#define IPHONE5 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
+#define WIDTH [UIScreen mainScreen].bounds.size.width
+#define HEIGHT [UIScreen mainScreen].bounds.size.height
+
+// 颜色
+#define COMMON_WHITE_COLOR [UIColor colorWithWhite:0.95 alpha:1.0]
+#define COMMON_BLUE_COLOR [UIColor colorWithRed:37.0/255.0 green:134.0/255.0 blue:239.0/255.0 alpha:1.0]
+#define TOPBAR_BLUE_COLOR [UIColor colorWithRed:37.0/255.0 green:134.0/255.0 blue:239.0/255.0 alpha:1.0]
+
+#define NO_NETWORK_MSG @"NO NETWORK"
+
+#endif

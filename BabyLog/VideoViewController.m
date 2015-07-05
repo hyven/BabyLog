@@ -20,9 +20,9 @@
     if (self) {
         // Custom initialization
         self.view.tag = 1003;
-        self.tabBarItem.image = [[UIImage imageNamed:@"tabicon_video_off"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        self.tabBarItem.selectedImage = [[UIImage imageNamed:@"tabicon_video_on"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        self.tabBarItem.title = @"生活片段";
+        self.tabBarItem.image = [[UIImage imageNamed:@"Shenghuo-Grey"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        self.tabBarItem.selectedImage = [[UIImage imageNamed:@"Shenghuo-Blue"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [self.tabBarItem setImageInsets:UIEdgeInsetsMake(5.5, 0.0, -5.5, 0.0)];
 
     }
     return self;

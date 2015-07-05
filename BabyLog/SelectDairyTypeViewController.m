@@ -78,7 +78,7 @@
     for (NSInteger i = 0; i < 3; i++) {
         NSInteger index = i + startIndex;
         if (index < _dairyType.count) {
-            DairyTypeButton *tb = [[DairyTypeButton alloc]initWithFrame:CGRectMake(i * 100, 0, 100, 85)];
+            DairyTypeButton *tb = [[DairyTypeButton alloc]initWithFrame:CGRectMake(i * 100, 0, 100, 80)];
             tb.dairyTypeId = [[_dairyType objectAtIndex:index]objectForKey:@"key"];
             tb.diaryTypeName =[[_dairyType objectAtIndex:index]objectForKey:@"name"];
             [tb loadData];
@@ -92,7 +92,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 85;
+    return 80;
 }
 
 #pragma mark 页面效果

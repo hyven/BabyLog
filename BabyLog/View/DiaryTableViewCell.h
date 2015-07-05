@@ -10,11 +10,12 @@
 
 @interface DiaryTableViewCell : UITableViewCell
 
+@property (nonatomic, assign)int diaryId;
 @property (nonatomic ,retain)UILabel *timeLable;
 @property (nonatomic ,retain)UILabel *nameLable;
 @property (nonatomic ,retain)UIImageView * diaryTypeImgView;
 @property (nonatomic ,retain)UIImageView * rankImgView;
-@property (nonatomic ,retain)UIImageView * delImgView;
-@property (nonatomic, retain)UILabel * picCountLabel;
+@property (nonatomic ,retain)UIButton * delImgView;
+@property (nonatomic, retain)UIImageView * picCountImgView;
 
 @end

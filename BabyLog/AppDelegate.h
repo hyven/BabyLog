@@ -11,6 +11,7 @@
 
 NSString *tokenStr;
 NSString *userNameStr;
+NSString *tag;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

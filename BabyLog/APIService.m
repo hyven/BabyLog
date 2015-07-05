@@ -67,6 +67,16 @@
     [[OperationContainer shareOperationContainer] addOperationObject:self.delegate withMethod:upinfo];
 }
 
+-(void) babyInfoUpdatePhotoWithBase64String:(NSString *)base64
+{
+    BabyInfoUpdatePhoto *userUpdateAvatar = [[BabyInfoUpdatePhoto alloc] init];
+    userUpdateAvatar.delegate = self.delegate;
+    userUpdateAvatar.base64 = base64;
+    
+    [[OperationContainer shareOperationContainer] addOperationObject:self.delegate withMethod:userUpdateAvatar];
+}
+
+
 #pragma mark - Dairy
 
 -(void) getDiaryList:(NSString *)day
@@ -78,7 +88,14 @@
     [[OperationContainer shareOperationContainer] addOperationObject:self.delegate withMethod:diary];
 }
 
-
+-(void) deleteDiary:(NSString *)diaryId
+{
+    DiaryDelete *diary = [[DiaryDelete alloc]init];
+    diary.diaryId = diaryId;
+    diary.delegate = self.delegate;
+    
+    [[OperationContainer shareOperationContainer] addOperationObject:self.delegate withMethod:diary];
+}
 
 
 @end

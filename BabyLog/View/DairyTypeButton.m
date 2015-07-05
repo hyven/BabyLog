@@ -19,10 +19,10 @@
     self = [super initWithFrame:frame];
     if (self) {
         diaryTypeImgView = [[UIImageView alloc]init];
-        diaryTypeImgView.frame = CGRectMake(20, 5, 60, 60);
+        diaryTypeImgView.frame = CGRectMake(20, 5, 55, 55);
         
         diaryTypeNameLable = [[UILabel alloc]init];
-        diaryTypeNameLable.frame = CGRectMake(0, 65, 100, 20);
+        diaryTypeNameLable.frame = CGRectMake(0, 60, 100, 20);
         [diaryTypeNameLable setTextAlignment:NSTextAlignmentCenter];
         diaryTypeNameLable.font = [UIFont systemFontOfSize:12.0f];
         
@@ -34,7 +34,7 @@
 
 -(void)loadData
 {
-    UIImage *img = [UIImage imageNamed:[NSString stringWithFormat:@"diary_%@", self.dairyTypeId]];
+    UIImage *img = [UIImage imageNamed:[NSString stringWithFormat:@"activity_%@", self.dairyTypeId]];
     diaryTypeImgView.image = img;
     
     diaryTypeNameLable.text = self.diaryTypeName;

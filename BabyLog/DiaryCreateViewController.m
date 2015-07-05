@@ -10,6 +10,7 @@
 #import "ConstantDefine.h"
 #import "SelectDateViewController.h"
 #import "SelectDairyTypeViewController.h"
+//#import "UzysAssetsPickerController.h"
 
 @interface DiaryCreateViewController ()
 
@@ -57,9 +58,16 @@
     formTV.showsVerticalScrollIndicator=NO;
     formTV.tag = 9001;
     [self.view addSubview:formTV];
+    if ([formTV respondsToSelector:@selector(setSeparatorInset:)]) {
+        [formTV setSeparatorInset:UIEdgeInsetsZero];
+    }
+    if ([formTV respondsToSelector:@selector(setLayoutMargins:)]) {
+        [formTV setLayoutMargins:UIEdgeInsetsZero];
+    }
+
     
     UIButton * button=[UIButton buttonWithType:UIButtonTypeCustom];
-    button.frame=CGRectMake(10, 500, 300, 40);
+    button.frame=CGRectMake(10, 420, 300, 40);
     [button setTitle:@"保存作息" forState:UIControlStateNormal];
     [button setBackgroundImage:[UIImage imageNamed:@"redbutton"] forState:UIControlStateNormal];
     [button addTarget:self action:@selector(saveInfo) forControlEvents:UIControlEventTouchUpInside];
@@ -87,7 +95,7 @@
 -(void)selectDairyType:(NSNotification *)_notification
 {
     NSArray *selectType = [_notification object];;
-    typeImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"diary_%@", [selectType objectAtIndex:0]]];
+    typeImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"activity_%@", [selectType objectAtIndex:0]]];
     typeName.text = [selectType objectAtIndex:1];
     [typeTF removeFromSuperview];
 }
@@ -130,6 +138,15 @@
     [super viewWillDisappear:animated];
     
     [self.navigationController setNavigationBarHidden:YES animated:animated];
+}
+
+-(void)choosePic
+{
+//    UzysAssetsPickerController *picker = [[UzysAssetsPickerController alloc] init];
+//    picker.delegate = self;
+//    picker.maximumNumberOfSelectionVideo = 0;
+//    picker.maximumNumberOfSelectionPhoto = 3;
+    
 }
 
 #pragma mark tableViewDelegate
@@ -244,13 +261,14 @@
             
             bar = [[RatingBar alloc] initWithFrame:CGRectMake(80, 0, 160, 40)];
             bar.starNumber = 5;
+            
             [cell addSubview:bar];
 
         }
             break;
         case 5:
         {
-            UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, 60, 40)];
+            UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, 60, 80)];
             [label setText:@"内      容："];
             [label setFont:[UIFont systemFontOfSize:12.0f]];
             [cell addSubview:label];
@@ -265,12 +283,17 @@
             break;
         case 6:
         {
-            UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, 60, 40)];
+            UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, 60, 80)];
             [label setText:@"上传图片："];
             [label setFont:[UIFont systemFontOfSize:12.0f]];
             [cell addSubview:label];
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             
+            UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            addBtn.frame = CGRectMake(80, 10, 50, 50);
+            [addBtn setImage:[UIImage imageNamed:@"icon_addpic"] forState:UIControlStateNormal];
+            [addBtn addTarget:self action:@selector(choosePic) forControlEvents:UIControlEventTouchUpInside];
+            [cell addSubview:addBtn];
         }
             break;
         default:
@@ -312,6 +335,15 @@
     return 40;
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
+        [cell setSeparatorInset:UIEdgeInsetsZero];
+    }
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+        [cell setLayoutMargins:UIEdgeInsetsZero];
+    }
+}
 #pragma mark goto
 
 -(void) selectDate

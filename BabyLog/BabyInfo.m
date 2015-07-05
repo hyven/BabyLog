@@ -81,3 +81,37 @@
 }
 
 @end
+
+@implementation BabyInfoUpdatePhoto
+
+-(id) init
+{
+    self = [super init];
+    if (self) {
+        self.methodName = @"user.babyInfoUpdatePhoto";
+    }
+    return self;
+}
+
+-(void) resultWithJson:(NSDictionary *) dic
+{
+    
+}
+
+-(void) methodCallBack
+{
+    if ([self.delegate respondsToSelector:@selector(babyInfoUpdatePhotoCallBack:)]) {
+        [self.delegate babyInfoUpdatePhotoCallBack:self.apiResult];
+    }
+}
+
+-(NSDictionary *) getRequestParams
+{
+    NSDictionary * dic=[[NSDictionary alloc] initWithObjects:@[self.base64]
+                                                     forKeys:@[@"Base64"]];
+    
+    return dic;
+}
+
+@end
+

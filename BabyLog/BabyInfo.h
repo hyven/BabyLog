@@ -21,3 +21,9 @@
 @property(nonatomic, retain)BabyInfoModel* babyInfo;
 
 @end
+
+@interface BabyInfoUpdatePhoto : MethodBase
+
+@property(nonatomic,retain) NSString * base64;
+
+@end
